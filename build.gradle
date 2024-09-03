@@ -21,11 +21,7 @@ dependencyManagement {
 }
 
 dependencies {
-//    implementation("io.micronaut.kafka:micronaut-kafka:4.0.0")
-//    implementation("io.micronaut:micronaut-runtime")
-//    implementation("javax.annotation:javax.annotation-api")
-//    testImplementation("io.micronaut.test:micronaut-test-spock")
-//    testImplementation("org.spockframework:spock-core")
+
     compile "io.micronaut:micronaut-runtime-groovy"
     compile "io.micronaut:micronaut-validation"
     compile "io.micronaut:micronaut-http-client"

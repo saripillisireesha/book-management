@@ -44,19 +44,58 @@ class UserController {
         return userService.getById(id)
     }
     @Put("/update/{id}")
-    def update(@PathVariable Long id, @Body UserModelManagement userModelManagement){
-        userService.updateUsers(id, userModelManagement)
-        return "updated Successfully"
+    @Status(HttpStatus.CREATED)
+
+    HttpResponse<UserModelManagement> update(@PathVariable Long id, @Body UserModelManagement userModelManagement) {
+        try {
+            def user = userService.updateUsers(id, userModelManagement) // Updated method name
+            if (user) {
+                return HttpResponse.ok(user)
+            } else {
+                return HttpResponse.badRequest("Failed to update user")
+            }
+        } catch (Exception e) {
+            return HttpResponse.serverError("An error occurred: ${e.message}")
+        }
     }
+
     @Delete("/{id}")
-    def deleteById(@PathVariable Long id){
-        userService.deleteUser(id)
-        return "Deleted Successfully"
+    @Status(HttpStatus.NO_CONTENT)
+    def deleteUser(@PathVariable Long id) {
+        try {
+            // Attempt to delete the user
+            boolean isDeleted = userService.deleteUser(id)
+
+            if (isDeleted){
+                return HttpResponse.noContent()  // No content typically means success, no body included
+            } else {
+                // Return 400 Bad Request if deletion failed
+                return HttpResponse.notFound("Failed to delete user")
+            }
+        } catch (Exception e) {
+            println "Exception occurred: ${e.message}"
+            return HttpResponse.serverError("An error occurred: ${e.message}")
+        }
     }
+
+
     @Post("/login")
-    def login( @Body UserModelManagement userModelManagement){
-        return userService.loginUser(userModelManagement.email,userModelManagement.password)
+    @Status(HttpStatus.OK)
+    def login(@Body UserModelManagement userModelManagement){
+        try {
+            def user = userService.loginUser(userModelManagement.email,userModelManagement.password)
+            println user
+            if (user) {
+                return HttpResponse.ok(user)
+            } else {
+                return HttpResponse.badRequest("Failed to add user")
+            }
+        }
+        catch(Exception e){
+            return HttpResponse.serverError("An error occurred: ${e.message}")
+        }
     }
+
     @Get("/startingname")
     def starts(){
         return userService.getNameStartsWith()

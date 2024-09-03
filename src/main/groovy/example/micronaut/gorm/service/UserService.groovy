@@ -58,6 +58,7 @@ class UserService {
         UserDomainManagement userDomainManagement=UserDomainManagement.findById(id)
         if(userDomainManagement){
             userDomainManagement.delete()
+            return true
         }
         else{
             return false
